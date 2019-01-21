@@ -23,15 +23,11 @@ Digite 'jogar' para jogar ou 'sair' para sair.");
 
         let command = command.trim();
 
-        if command == "jogar" {
-            break start_new_game();
-        }
-        else if command == "sair" {
-            break;
-        }
-        else {
-            println!("Digite 'jogar' para jogar ou 'sair' para sair.");
-        }
+        match command {
+            "jogar" => break start_new_game(),
+            "sair" => break,
+            _ => println!("Digite 'jogar' para jogar ou 'sair' para sair."),
+        };
     }
 }
 
@@ -156,14 +152,11 @@ fn show_play_again(winner: MarkType) {
         io::stdin().read_line(&mut command).expect("Falha ao ler a linha.");
 
         let command = command.trim();
-        if command == "jogar" {
-            break start_new_game();
-        }
-        else if command == "sair" {
-            break;
-        }
-
-        println!("Digite 'jogar' para jogar novamente ou 'sair' para sair.");
+        match command {
+            "jogar" => break start_new_game(),
+            "sair" => break,
+            _ => println!("Digite 'jogar' para jogar novamente ou 'sair' para sair."),
+        };
     }
 }
 
