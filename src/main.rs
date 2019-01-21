@@ -196,22 +196,12 @@ fn listen_for_input(board: &mut Vec<MarkType>, turn: &mut MarkType) {
                 }
             };
             
-            if let Ordering::Greater = x.cmp(&3) {
+            if x < 1 || x > 3 {
                 println!("Coluna inválida! Tente novamente. Formato: LxC");
                 continue;
             }
 
-            if let Ordering::Less = x.cmp(&1) {
-                println!("Coluna inválida! Tente novamente. Formato: LxC");
-                continue;
-            }
-
-            if let Ordering::Greater = y.cmp(&3) {
-                println!("Linha inválida! Tente novamente. Formato: LxC");
-                continue;
-            }
-
-            if let Ordering::Less = y.cmp(&1) {
+            if y < 1 || y > 3 {
                 println!("Linha inválida! Tente novamente. Formato: LxC");
                 continue;
             }
