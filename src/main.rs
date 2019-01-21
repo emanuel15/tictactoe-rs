@@ -1,5 +1,4 @@
 use std::io;
-use std::cmp::Ordering;
 
 #[derive(Debug)]
 enum MarkType {
@@ -46,9 +45,9 @@ fn start_new_game() {
 }
 
 fn draw_board(board: &Vec<MarkType>) {
-    println!("[{}|{}|{}]", get_char_from_mark(&board[0]), get_char_from_mark(&board[1]), get_char_from_mark(&board[2]));
-    println!("[{}|{}|{}]", get_char_from_mark(&board[3]), get_char_from_mark(&board[4]), get_char_from_mark(&board[5]));
-    println!("[{}|{}|{}]", get_char_from_mark(&board[6]), get_char_from_mark(&board[7]), get_char_from_mark(&board[8]));
+    for (i, _item) in board.iter().enumerate().step_by(3) {
+        println!("[{}|{}|{}]", get_char_from_mark(&board[i]), get_char_from_mark(&board[i+1]), get_char_from_mark(&board[i+2]));
+    }
 }
 
 fn show_turn(turn: &MarkType) {
@@ -94,9 +93,10 @@ fn check_winners(board: &Vec<MarkType>) -> MarkType {
     }
 
     // horizontal
-    for (i, item) in nboard.iter().enumerate().step_by(3) {
-        if item == &nboard[i+1] && item == &nboard[i+2] {
-            match item {
+    for i in 0..3 {
+        let index = i * 3;
+        if &nboard[index] == &nboard[index+1] && &nboard[index] == &nboard[index+2] {
+            match &nboard[index] {
                 1 => return MarkType::Cross,
                 2 => return MarkType::Circle,
                 _ => return MarkType::Nothing,
@@ -196,13 +196,14 @@ fn listen_for_input(board: &mut Vec<MarkType>, turn: &mut MarkType) {
                 }
             };
             
-            if x < 1 || x > 3 {
-                println!("Coluna inválida! Tente novamente. Formato: LxC");
-                continue;
-            }
-
-            if y < 1 || y > 3 {
-                println!("Linha inválida! Tente novamente. Formato: LxC");
+            if (x < 1 || x > 3) || (y < 1 || y > 3) {
+                println!("{} inválida! Tente novamente. Formato: LxC",
+                    if x < 1 || x > 3 {
+                            "Coluna"
+                    } else {
+                        "Linha"
+                    }
+                );
                 continue;
             }
 
