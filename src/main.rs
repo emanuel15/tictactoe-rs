@@ -8,24 +8,22 @@ enum MarkType {
 }
 
 fn main() {
-    println!("Bem-vindo ao jogo da velha!
-==================== Como jogar ====================
-Para marcar um X ou O digite
-o numero da célula no seguinte formato:
-LxC
-Troque L pelo número da linha e C pelo número da coluna, ambos começando em 1.
-Digite 'jogar' para jogar ou 'sair' para sair.");
+    println!(" /////////////////////////////////////// TIC TAC TOE ///////////////////////////////////////
+======================================== How to play ========================================
+To mark a space with an X or an O type the space position following this format: RxC
+Replace R with the row number and C with the column number, both starting at 1.
+Type 'play' to play or 'quit' to quit.");
 
     loop {
         let mut command = String::new();
-        io::stdin().read_line(&mut command).expect("Falha ao ler a linha");
+        io::stdin().read_line(&mut command).expect("Failed to read the line.");
 
         let command = command.trim();
 
         match command {
-            "jogar" => break start_new_game(),
-            "sair" => break,
-            _ => println!("Digite 'jogar' para jogar ou 'sair' para sair."),
+            "play" => break start_new_game(),
+            "quit" => break,
+            _ => println!("Type 'play' to play or 'quit' to quit."),
         };
     }
 }
@@ -44,7 +42,7 @@ fn start_new_game() {
     listen_for_input(&mut board, &mut current_turn);
 }
 
-fn draw_board(board: &Vec<MarkType>) {
+fn draw_board(board: &[MarkType]) {
     for (i, _item) in board.iter().enumerate().step_by(3) {
         println!("[{}|{}|{}]", get_char_from_mark(&board[i]), get_char_from_mark(&board[i+1]), get_char_from_mark(&board[i+2]));
     }
@@ -52,8 +50,8 @@ fn draw_board(board: &Vec<MarkType>) {
 
 fn show_turn(turn: &MarkType) {
     match turn {
-        MarkType::Circle => println!("É a vez do círculo!"),
-        MarkType::Cross => println!("É a vez da cruz!"),
+        MarkType::Circle => println!("It's O turn!"),
+        MarkType::Cross => println!("It's X turn!"),
         _ => ()
     }
 }
@@ -81,7 +79,7 @@ fn set_cell(x: u8, y: u8, board: &mut Vec<MarkType>, new_cell: &MarkType) -> boo
     }
 }
 
-fn check_winners(board: &Vec<MarkType>) -> MarkType {
+fn check_winners(board: &[MarkType]) -> MarkType {
     let mut nboard: Vec<u8> = Vec::new();
 
     for item in board.iter() {
@@ -95,7 +93,7 @@ fn check_winners(board: &Vec<MarkType>) -> MarkType {
     // horizontal
     for i in 0..3 {
         let index = i * 3;
-        if &nboard[index] == &nboard[index+1] && &nboard[index] == &nboard[index+2] {
+        if nboard[index] == nboard[index+1] && nboard[index] == nboard[index+2] {
             match &nboard[index] {
                 1 => return MarkType::Cross,
                 2 => return MarkType::Circle,
@@ -106,7 +104,7 @@ fn check_winners(board: &Vec<MarkType>) -> MarkType {
 
     // vertical
     for i in 0..3 {
-        if &nboard[i] == &nboard[i+3] && &nboard[i] == &nboard[i+6] {
+        if nboard[i] == nboard[i+3] && nboard[i] == nboard[i+6] {
             match &nboard[i] {
                 1 => return MarkType::Cross,
                 2 => return MarkType::Circle,
@@ -116,8 +114,8 @@ fn check_winners(board: &Vec<MarkType>) -> MarkType {
     }
 
     // corners
-    if (&nboard[0] == &nboard[4] && &nboard[0] == &nboard[8])
-        || (&nboard[2] == &nboard[4] && &nboard[2] == &nboard[6]) {
+    if (nboard[0] == nboard[4] && nboard[0] == nboard[8])
+        || (nboard[2] == nboard[4] && nboard[2] == nboard[6]) {
         match &nboard[4] {
             1 => return MarkType::Cross,
             2 => return MarkType::Circle,
@@ -128,7 +126,7 @@ fn check_winners(board: &Vec<MarkType>) -> MarkType {
     MarkType::Nothing
 }
 
-fn check_tie(board: &Vec<MarkType>) -> bool {
+fn check_tie(board: &[MarkType]) -> bool {
     let mut used = 0;
     for item in board.iter() {
         used += match item {
@@ -141,21 +139,21 @@ fn check_tie(board: &Vec<MarkType>) -> bool {
 
 fn show_play_again(winner: MarkType) {
     match winner {
-        MarkType::Circle => println!("Círculo venceu!"),
-        MarkType::Cross => println!("Cruz venceu!"),
-        MarkType::Nothing => println!("Empate!"),
+        MarkType::Circle => println!("O won!"),
+        MarkType::Cross => println!("X won!"),
+        MarkType::Nothing => println!("Draw!"),
     };
 
-    println!("Digite 'jogar' para jogar novamente ou 'sair' para sair.");
+    println!("Type 'play' to play again or 'quit' to quit.");
     loop {
         let mut command = String::new();
-        io::stdin().read_line(&mut command).expect("Falha ao ler a linha.");
+        io::stdin().read_line(&mut command).expect("Failed to read the line.");
 
         let command = command.trim();
         match command {
-            "jogar" => break start_new_game(),
-            "sair" => break,
-            _ => println!("Digite 'jogar' para jogar novamente ou 'sair' para sair."),
+            "play" => break start_new_game(),
+            "quit" => break,
+            _ => println!("Type 'play' to play again or 'quit' to quit."),
         };
     }
 }
@@ -171,19 +169,19 @@ fn change_turn(turn: &mut MarkType) {
 fn listen_for_input(board: &mut Vec<MarkType>, turn: &mut MarkType) {
     loop {
         let mut command = String::new();
-        io::stdin().read_line(&mut command).expect("Falha ao ler a linha.");
+        io::stdin().read_line(&mut command).expect("Failed to read the line.");
 
-        let user_input: Vec<&str> = command.split("x").collect();
+        let user_input: Vec<&str> = command.split('x').collect();
 
         if user_input.len() != 2 {
-            println!("Tente novamente. Formato: LxC");
+            println!("Try again. Format: RxC");
             continue;
         }
         else {
             let x: u8 = match user_input[1].trim().parse() {
                 Ok(num) => num,
                 Err(_e) => {
-                    println!("Tente novamente. Formato: LxC");
+                    println!("Try again. Format: RxC");
                     continue;
                 }
             };
@@ -191,17 +189,17 @@ fn listen_for_input(board: &mut Vec<MarkType>, turn: &mut MarkType) {
             let y: u8 = match user_input[0].trim().parse() {
                 Ok(num) => num,
                 Err(_e) => {
-                    println!("Tente novamente. Formato: LxC");
+                    println!("Try again. Format: RxC");
                     continue;
                 }
             };
             
             if (x < 1 || x > 3) || (y < 1 || y > 3) {
-                println!("{} inválida! Tente novamente. Formato: LxC",
+                println!("Invalid {}! Try again. Format: RxC",
                     if x < 1 || x > 3 {
-                            "Coluna"
+                            "column"
                     } else {
-                        "Linha"
+                        "row"
                     }
                 );
                 continue;
@@ -226,7 +224,7 @@ fn listen_for_input(board: &mut Vec<MarkType>, turn: &mut MarkType) {
                 }
             }
             else {
-                println!("Essa célula já foi marcada, tente novamente. Formato: LxC");
+                println!("That space has been marked already, try again. Format: RxC");
                 continue;
             }
         }
