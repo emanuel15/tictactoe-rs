@@ -7,6 +7,8 @@ enum MarkType {
     Circle
 }
 
+use MarkType::*;
+
 fn main() {
     println!(" /////////////////////////////////////// TIC TAC TOE ///////////////////////////////////////
 ======================================== How to play ========================================
@@ -30,12 +32,12 @@ Type 'play' to play or 'quit' to quit.");
 
 fn start_new_game() {
     let mut board = vec![
-        MarkType::Nothing, MarkType::Nothing, MarkType::Nothing,
-        MarkType::Nothing, MarkType::Nothing, MarkType::Nothing,
-        MarkType::Nothing, MarkType::Nothing, MarkType::Nothing
+        Nothing, Nothing, Nothing,
+        Nothing, Nothing, Nothing,
+        Nothing, Nothing, Nothing
     ];
 
-    let mut current_turn = MarkType::Cross;
+    let mut current_turn = Cross;
 
     draw_board(&board);
     show_turn(&current_turn);
@@ -50,28 +52,28 @@ fn draw_board(board: &[MarkType]) {
 
 fn show_turn(turn: &MarkType) {
     match turn {
-        MarkType::Circle => println!("It's O turn!"),
-        MarkType::Cross => println!("It's X turn!"),
+        Circle => println!("It's O turn!"),
+        Cross => println!("It's X turn!"),
         _ => ()
     }
 }
 
 fn get_char_from_mark(mark: &MarkType) -> char {
     match mark {
-        MarkType::Nothing => ' ',
-        MarkType::Circle => 'O',
-        MarkType::Cross => 'X',
+        Nothing => ' ',
+        Circle => 'O',
+        Cross => 'X',
     }
 }
 
 fn set_cell(x: u8, y: u8, board: &mut Vec<MarkType>, new_cell: &MarkType) -> bool {
     let index = (y * 3 + x) as usize;
     match board[index] {
-        MarkType::Nothing => {
+        Nothing => {
             board[index] = match new_cell {
-                MarkType::Cross => MarkType::Cross,
-                MarkType::Circle => MarkType::Circle,
-                MarkType::Nothing => MarkType::Nothing,
+                Cross => Cross,
+                Circle => Circle,
+                Nothing => Nothing,
             };
             true
         },
@@ -84,9 +86,9 @@ fn check_winners(board: &[MarkType]) -> MarkType {
 
     for item in board.iter() {
         nboard.push(match item {
-            MarkType::Nothing => 0,
-            MarkType::Cross => 1,
-            MarkType::Circle => 2,
+            Nothing => 0,
+            Cross => 1,
+            Circle => 2,
         });
     }
 
@@ -95,9 +97,9 @@ fn check_winners(board: &[MarkType]) -> MarkType {
         let index = i * 3;
         if nboard[index] == nboard[index+1] && nboard[index] == nboard[index+2] {
             match &nboard[index] {
-                1 => return MarkType::Cross,
-                2 => return MarkType::Circle,
-                _ => return MarkType::Nothing,
+                1 => return Cross,
+                2 => return Circle,
+                _ => return Nothing,
             };
         }
     }
@@ -106,9 +108,9 @@ fn check_winners(board: &[MarkType]) -> MarkType {
     for i in 0..3 {
         if nboard[i] == nboard[i+3] && nboard[i] == nboard[i+6] {
             match &nboard[i] {
-                1 => return MarkType::Cross,
-                2 => return MarkType::Circle,
-                _ => return MarkType::Nothing,
+                1 => return Cross,
+                2 => return Circle,
+                _ => return Nothing,
             };
         }
     }
@@ -117,20 +119,20 @@ fn check_winners(board: &[MarkType]) -> MarkType {
     if (nboard[0] == nboard[4] && nboard[0] == nboard[8])
         || (nboard[2] == nboard[4] && nboard[2] == nboard[6]) {
         match &nboard[4] {
-            1 => return MarkType::Cross,
-            2 => return MarkType::Circle,
-            _ => return MarkType::Nothing,
+            1 => return Cross,
+            2 => return Circle,
+            _ => return Nothing,
         };
     }
 
-    MarkType::Nothing
+    Nothing
 }
 
 fn check_tie(board: &[MarkType]) -> bool {
     let mut used = 0;
     for item in board.iter() {
         used += match item {
-            MarkType::Nothing => 0,
+            Nothing => 0,
             _ => 1,
         };
     }
@@ -139,9 +141,9 @@ fn check_tie(board: &[MarkType]) -> bool {
 
 fn show_play_again(winner: MarkType) {
     match winner {
-        MarkType::Circle => println!("O won!"),
-        MarkType::Cross => println!("X won!"),
-        MarkType::Nothing => println!("Draw!"),
+        Circle => println!("O won!"),
+        Cross => println!("X won!"),
+        Nothing => println!("Draw!"),
     };
 
     println!("Type 'play' to play again or 'quit' to quit.");
@@ -160,9 +162,9 @@ fn show_play_again(winner: MarkType) {
 
 fn change_turn(turn: &mut MarkType) {
     *turn = match turn {
-        MarkType::Circle => MarkType::Cross,
-        MarkType::Cross => MarkType::Circle,
-        _ => MarkType::Nothing,
+        Circle => Cross,
+        Cross => Circle,
+        _ => Nothing,
     }
 }
 
