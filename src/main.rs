@@ -1,6 +1,8 @@
 use std::io;
 
 #[derive(Debug)]
+#[derive(PartialEq)]
+#[derive(Clone)]
 enum MarkType {
     Nothing,
     Cross,
@@ -82,47 +84,22 @@ fn set_cell(x: u8, y: u8, board: &mut Vec<MarkType>, new_cell: &MarkType) -> boo
 }
 
 fn check_winners(board: &[MarkType]) -> MarkType {
-    let mut nboard: Vec<u8> = Vec::new();
 
-    for item in board.iter() {
-        nboard.push(match item {
-            Nothing => 0,
-            Cross => 1,
-            Circle => 2,
-        });
-    }
+    let winner_positions = vec![
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
 
-    // horizontal
-    for i in 0..3 {
-        let index = i * 3;
-        if nboard[index] == nboard[index+1] && nboard[index] == nboard[index+2] {
-            match &nboard[index] {
-                1 => return Cross,
-                2 => return Circle,
-                _ => return Nothing,
-            };
+    for i in 0..8 {
+        if board[winner_positions[i][0]] == board[winner_positions[i][1]] && board[winner_positions[i][0]] == board[winner_positions[i][2]] {
+            return board[winner_positions[i][0]].clone();
         }
-    }
-
-    // vertical
-    for i in 0..3 {
-        if nboard[i] == nboard[i+3] && nboard[i] == nboard[i+6] {
-            match &nboard[i] {
-                1 => return Cross,
-                2 => return Circle,
-                _ => return Nothing,
-            };
-        }
-    }
-
-    // corners
-    if (nboard[0] == nboard[4] && nboard[0] == nboard[8])
-        || (nboard[2] == nboard[4] && nboard[2] == nboard[6]) {
-        match &nboard[4] {
-            1 => return Cross,
-            2 => return Circle,
-            _ => return Nothing,
-        };
     }
 
     Nothing
